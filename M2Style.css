@@ -1,0 +1,26 @@
+#bank_title{
+    font-family: "Courier New";
+    font-size: 60px;
+    font-weight: 300;
+    text-align: center;
+}
+#update_Info_Btn{
+
+}
+
+#target_User_Btn{
+
+}
+
+#offers_Table{
+    text-align: right;
+    border-collapse: collapse;
+}
+
+#offers_Table td{
+    border: 1px solid #dddddd;
+    padding: 8px;
+}
+#offers_Table tr:nth-child(even){ /* tager hver anden(lige) reakke i offers_table */
+    background-color: #dddddd;
+}
