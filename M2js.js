@@ -10,7 +10,7 @@ $(document).ready(function () {
     //getAccountInfo();
     //seeOffers();
     //setInterval(getAccountInfo, 300000);
-    //setInterval(seeOffers, 10000);
+    //setInterval(seeOffers, 4000);
 });
 
 
@@ -49,25 +49,19 @@ function seeOffers() { //http://52.57.228.6/man2API/php/BankPhp.php?what=offers&
 
                 for (var i = 1; i <= dataString.data.length; i++) {
 
-                    var row = document.getElementById("offers_Table").insertRow(i);
-                    row.className = "text-right";
-                    var cell1 = row.insertCell(0);
-                    var cell2 = row.insertCell(1);
-                    var cell3 = row.insertCell(2);
-                    var cell4 = row.insertCell(3);
-                    var cell5 = row.insertCell(4);
+                    $('#offers_Table').append('<tr class="child" id="rownumber' + i + '">' +
+                        '<td> ' + dataString.data[i - 1].id + ' </td>' +
+                        '<td> ' + parseFloat(dataString.data[i - 1].amount).toFixed(2) + ' </td>' +
+                        '<td>' + dataString.data[i - 1].currency + '</td>' +
+                        '<td>' + dataString.data[i - 1].since + '</td>' +
+                        '</tr>');
 
-                    cell1.innerHTML = dataString.data[i - 1].id;
-                    cell2.innerHTML = parseFloat(dataString.data[i - 1].amount).toFixed(2); //sætter decimalantallet til 2
-                    cell3.innerHTML = dataString.data[i - 1].currency;
-                    cell4.innerHTML = dataString.data[i - 1].since;
-                    cell5.innerHTML = dataString.data[i - 1].currency;
+                    getExhangeFromList(dataString.data[i - 1].currency, i, currencies);
 
                 }
             }
         }
-    )
-    ;
+    );
 }
 
 function getExhangeFromList(currency, i) {
@@ -81,9 +75,9 @@ function getExhangeFromList(currency, i) {
             'to': user
         },
         dataType: 'json',
-        'success': function (dataString) {
-            var amount = dataString.data.amount;
-            $("#exchange_Cell_Row" + i).innerHTML = amount;
+        'success': function (dataString2) {
+            var idname = '#rownumber' + i;
+            $(idname).append('<td> ' + dataString2.data.amount + ' </td>');
         }
     });
 }
