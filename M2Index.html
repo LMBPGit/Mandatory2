@@ -16,7 +16,7 @@
 
 <div class="container-fluid">
     <div>
-        <ul class="nav nav-tabs" role="tablist">
+        <ul id="tabs" class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active"><a href="#home_Tab" aria-controls="home_tab" role="tab"
                                                       data-toggle="tab">
                 Home</a>
@@ -49,7 +49,6 @@
             <input id="sell_amount" type="text" name="amount" placeholder="sell amount">
             <button id="sell_Btn" onclick="setOffer()"> Set for sale</button>
             <br>
-
             <table id="offers_Table" class="table table-bordered table-condensed table-hover">
                 <tr id="offers_Rows">
                     <th class="text-center">Offer ID</th>

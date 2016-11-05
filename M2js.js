@@ -4,15 +4,15 @@
 const user = 'LUCA0526'; //change to input window mb;
 const key = '7cceee87aa251a526da7cbbf84341693';
 const url = 'http://52.57.228.6/man2API/php/BankPhp.php';
-
+var currencies = [{currencyName: "LUCA0526"}];
+var tempArray = [];
 
 $(document).ready(function () {
-    //getAccountInfo();
-    //seeOffers();
-    //setInterval(getAccountInfo, 300000);
-    //setInterval(seeOffers, 4000);
+    getAccountInfo();
+    seeOffers();
+    setInterval(getAccountInfo, 300000);
+    setInterval(seeOffers, 40000);
 });
-
 
 function setOffer() {
     $.ajax({
@@ -31,6 +31,7 @@ function setOffer() {
     });
 }
 
+
 function seeOffers() { //http://52.57.228.6/man2API/php/BankPhp.php?what=offers&apikey=7cceee87aa251a526da7cbbf84341693
     $.ajax({
             'url': url,
@@ -48,23 +49,62 @@ function seeOffers() { //http://52.57.228.6/man2API/php/BankPhp.php?what=offers&
                 }
 
                 for (var i = 1; i <= dataString.data.length; i++) {
+                    currencies.push({currencyName: dataString.data[i - 1].currency});
 
-                    $('#offers_Table').append('<tr class="child" id="rownumber' + i + '">' +
-                        '<td> ' + dataString.data[i - 1].id + ' </td>' +
-                        '<td> ' + parseFloat(dataString.data[i - 1].amount).toFixed(2) + ' </td>' +
+                    $("#offers_Table").append('<tr class="child" id="rownumber' + i + '">' +
+                        '<td>' + dataString.data[i - 1].id + ' </td>' +
+                        '<td>' + parseFloat(dataString.data[i - 1].amount).toFixed(2) + ' </td>' +
                         '<td>' + dataString.data[i - 1].currency + '</td>' +
                         '<td>' + dataString.data[i - 1].since + '</td>' +
+                        '<td> 100.00 </td>' +
+                        //'<td><button id="heybtn' + i + '"> hey </button></td>' +
                         '</tr>');
 
-                    getExhangeFromList(dataString.data[i - 1].currency, i, currencies);
+                    const currentID = dataString.data[i - 1].id;
 
+                    $('#heybtn' + i).click(function () {
+                        buySpecificOfferFromTable(currentID);
+                    });
                 }
+
+                currencies = $.uniqueSort(currencies);
+                tempArray = [];
+                var checkList = [];
+
+                $.each(currencies, function (index, value) {
+                    const currentCurrency = value.currencyName;
+                    var here = false;
+                    $.each(checkList, function (checkindex, checkvalue) {
+                        if (currentCurrency == checkvalue.currencyName) {
+                            here = true;
+                        }
+                    });
+                    if (!here) {
+                        checkList.push({currencyName: currentCurrency});
+                        getExhangeFromList(currentCurrency);
+                    }
+                });
+
+                setTimeout(function () {
+                    inputExchangeRate(tempArray);
+                }, 300);
             }
         }
     );
 }
 
-function getExhangeFromList(currency, i) {
+function inputExchangeRate(tempArray) {
+    $.each($('#offers_Table')[0].rows, function (index, value) {
+        $.each(tempArray, function (tempindex, tempvalue) {
+            if (value.cells[2].innerHTML == tempvalue.currencyName) {
+                value.cells[4].innerHTML = parseFloat(tempvalue.currentAmount).toFixed(2);
+            }
+        });
+    });
+}
+
+function getExhangeFromList(currency) {
+
     $.ajax({
         'url': url,
         'type': 'GET',
@@ -75,9 +115,31 @@ function getExhangeFromList(currency, i) {
             'to': user
         },
         dataType: 'json',
-        'success': function (dataString2) {
-            var idname = '#rownumber' + i;
-            $(idname).append('<td> ' + dataString2.data.amount + ' </td>');
+        'success': function (dataString) {
+            const amount = dataString.data.amount;
+            tempArray.push({
+                currencyName: currency,
+                currentAmount: amount
+            });
+        }
+    });
+}
+
+function buySpecificOfferFromTable(offerID) {
+
+    $.ajax({
+        'url': url,
+        'type': 'GET',
+        'data': {
+            'apikey': key,
+            'what': 'buy',
+            'offer': offerID
+        },
+        dataType: 'json',
+        'success': function (dataString) {
+            $('#buy_Success_Text').text("offer" + offerID + " has been bought");
+            setTimeout(seeOffers, 500);
+
         }
     });
 }

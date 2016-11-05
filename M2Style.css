@@ -21,3 +21,7 @@
 #offers_Table tr:nth-child(even){ /* tager hver anden(lige) reakke i offers_table */
     background-color: #dddddd;
 }
+
+#tabs{
+    align-self: center;
+}
