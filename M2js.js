@@ -5,7 +5,8 @@ const user = 'LUCA0526'; //change to input window mb;
 const key = '7cceee87aa251a526da7cbbf84341693';
 const url = 'http://52.57.228.6/man2API/php/BankPhp.php';
 var currencies = [{currencyName: "LUCA0526"}];
-var tempArray = [];
+var uberArray = [];
+//var tempArray = [];
 
 $(document).ready(function () {
     getAccountInfo();
@@ -25,7 +26,8 @@ function setOffer() {
         },
         dataType: 'json',
         'success': function (dataString) {
-            setTimeout(seeOffers, 500);
+            seeOffers();
+            getAccountInfo();
             $('#sell_amount').text("");
         }
     });
@@ -57,7 +59,7 @@ function seeOffers() { //http://52.57.228.6/man2API/php/BankPhp.php?what=offers&
                         '<td>' + dataString.data[i - 1].currency + '</td>' +
                         '<td>' + dataString.data[i - 1].since + '</td>' +
                         '<td> 100.00 </td>' +
-                        //'<td><button id="heybtn' + i + '"> hey </button></td>' +
+                        '<td><button id="heybtn' + i + '"> hey </button></td>' +
                         '</tr>');
 
                     const currentID = dataString.data[i - 1].id;
@@ -68,7 +70,7 @@ function seeOffers() { //http://52.57.228.6/man2API/php/BankPhp.php?what=offers&
                 }
 
                 currencies = $.uniqueSort(currencies);
-                tempArray = [];
+                var tempArray = [];
                 var checkList = [];
 
                 $.each(currencies, function (index, value) {
@@ -81,20 +83,18 @@ function seeOffers() { //http://52.57.228.6/man2API/php/BankPhp.php?what=offers&
                     });
                     if (!here) {
                         checkList.push({currencyName: currentCurrency});
-                        getExhangeFromList(currentCurrency);
+                        getExhangeFromList(currentCurrency, tempArray);
                     }
                 });
-
-                setTimeout(function () {
-                    inputExchangeRate(tempArray);
-                }, 300);
+                inputExchangeRate(tempArray);
             }
         }
     );
 }
 
-function inputExchangeRate(tempArray) {
+function inputExchangeRate() {
     $.each($('#offers_Table')[0].rows, function (index, value) {
+        var tempArray = uberArray[uberArray.length-1];
         $.each(tempArray, function (tempindex, tempvalue) {
             if (value.cells[2].innerHTML == tempvalue.currencyName) {
                 value.cells[4].innerHTML = parseFloat(tempvalue.currentAmount).toFixed(2);
@@ -103,7 +103,7 @@ function inputExchangeRate(tempArray) {
     });
 }
 
-function getExhangeFromList(currency) {
+function getExhangeFromList(currency, tempArray) {
 
     $.ajax({
         'url': url,
@@ -121,6 +121,7 @@ function getExhangeFromList(currency) {
                 currencyName: currency,
                 currentAmount: amount
             });
+            uberArray.push(tempArray);
         }
     });
 }
@@ -138,7 +139,8 @@ function buySpecificOfferFromTable(offerID) {
         dataType: 'json',
         'success': function (dataString) {
             $('#buy_Success_Text').text("offer" + offerID + " has been bought");
-            setTimeout(seeOffers, 500);
+            seeOffers();
+            getAccountInfo();
 
         }
     });
@@ -156,13 +158,15 @@ function buySpecificOffer() {
         dataType: 'json',
         'success': function (dataString) {
             $('#buy_Success_Text').text("offer" + $('#offer_Buy_ID').val() + " has been bought");
-            setTimeout(seeOffers, 500)
+            seeOffers();
+            getAccountInfo();
         }
     });
 }
 
 
 function getExchangeRate() {
+    console.log(uberArray);
     $.ajax({
         'url': url,
         'type': 'GET',

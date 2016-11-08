@@ -14,7 +14,7 @@
 
 <h1 class="text-center" style="font-family: 'Courier New'"> BANK OF POVERTY </h1>
 
-<div class="container-fluid">
+<div class="container">
     <div>
         <ul id="tabs" class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active"><a href="#home_Tab" aria-controls="home_tab" role="tab"
@@ -28,19 +28,18 @@
     </div>
 
 
-    <div class="tab-content">
+    <div class="tab-content container">
         <div role="tabpanel" class="tab-pane fade in active" id="home_Tab">
             <div id="current_Status"></div>
-            <button id="update_Info_Btn" onclick="getAccountInfo()"> update</button>
+            <button id="update_Info_Btn" onclick="getAccountInfo()">update</button>
             <br>
 
-            <input id="target_User_Input" type="text" name="targetuser" value="LUCA0526"
-                   placeholder="Name of target user">
+            <input id="target_User_Input" type="text" name="targetuser" placeholder="Name of target user">
             <button id="check_Exchange_Btn" onclick="getExchangeRate()"> OK</button>
             <div id="exchange_Rate_Text">Exchange rate here</div>
             <br>
         </div>
-        <div role="tabpanel" class="tab-pane fade" id="buy_List_Tab">
+        <div role="tabpanel" class="tab-pane fade container" id="buy_List_Tab">
             <input id="offer_Buy_ID" type="number" name="offer" placeholder="Offer you want to buy">
             <button id="buy_Button" onclick="buySpecificOffer()"> Buy</button>
             <div id="buy_Success_Text"></div>
@@ -49,15 +48,18 @@
             <input id="sell_amount" type="text" name="amount" placeholder="sell amount">
             <button id="sell_Btn" onclick="setOffer()">Set for sale</button>
             <br>
-            <table id="offers_Table" class="table table-bordered table-condensed table-striped text-right">
-                <tr id="offers_Rows">
-                    <th class="text-center">Offer ID</th>
-                    <th class="text-center">Amount</th>
-                    <th class="text-center">Currency</th>
-                    <th class="text-center">Offer Date</th>
-                    <th class="text-center">Exchange Rate</th>
-                </tr>
-            </table>
+            <div style="height: 100%; overflow-y: scroll">
+                <table id="offers_Table" class="table table-bordered table-condensed table-striped text-right">
+                    <tr id="offers_Rows">
+                        <th class="text-center">Offer ID</th>
+                        <th class="text-center">Amount</th>
+                        <th class="text-center">Currency</th>
+                        <th class="text-center">Offer Date</th>
+                        <th class="text-center">Exchange Rate</th>
+                        <th class="text-center"></th>
+                    </tr>
+                </table>
+            </div>
             <button id="current_Offers_Btn" onclick="seeOffers()"> Force update offers</button>
         </div>
     </div>
@@ -68,7 +70,9 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/charts/loader.js"></script>
 <script src="M2js.js"></script>
+<script src="ChartMaker.js"></script>
 </body>
 
 </html>
